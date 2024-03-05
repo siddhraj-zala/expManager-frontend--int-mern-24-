@@ -14,8 +14,10 @@ function App() {
 
   const path = document.location.pathname;
   console.log('url path=', path);
+
   return (
     <div>
+
       <div className="wrapper">
 
         {
@@ -23,21 +25,26 @@ function App() {
         }
 
         <div className='main-panel'>
+
           <div className='content'>
+
             <Routes>
+
               <Route path='/' element={<Login />}></Route>
               <Route path='/signup' element={<Signup />}></Route>
+
               <Route element={<ProtectedRoutes />}>
                 <Route path='/user/dashboard' element={<UserDashboard />}></Route>
                 <Route path='/user/addExpense' element={<AddExpense />}></Route>
                 <Route path='/user/expenseList' element={<ExpenseList />}></Route>
                 <Route path='/user/updateExpense/:id' element={<UpdateExpense />}></Route>
               </Route>
+
             </Routes>
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 

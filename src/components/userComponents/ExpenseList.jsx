@@ -73,7 +73,11 @@ export const ExpenseList = () => {
                       <tr>
                         <td>{tr.category.categoryName}</td>
                         <td>{tr.subCategory.subCategoryName}</td>
-                        <td>{tr.amount}</td>
+                        {tr.transactionType.transactionType === "expense" 
+                        ? 
+                        <td style={{color:'red'}}>{`-${tr.amount}`}</td>
+                        : 
+                        <td style={{color:'green'}}>{`+${tr.amount}`}</td>}
                         <td>{tr.transactionDateTime}</td>
                         <td>{tr.transactionType.transactionType}</td>
                         <td>{tr.paymentType.paymentType}</td>

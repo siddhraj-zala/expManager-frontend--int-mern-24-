@@ -131,7 +131,7 @@ export const AddExpense = () => {
         //console.log("transaction data :", res.data.data);
         const getTrById = await axios.get("http://localhost:4000/transaction/getTransactionById/" + res.data.data._id);
         //console.log('transaction by id...', getTrById.data.data);
-        sendMail(getTrById.data.data);
+        //sendMail(getTrById.data.data);
       }
     }
     catch (err) {
