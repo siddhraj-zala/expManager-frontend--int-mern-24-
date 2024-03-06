@@ -62,6 +62,7 @@ export const ExpenseList = () => {
                     <th>payment type</th>
                     <th>payee</th>
                     <th>user</th>
+                    <th>goal</th>
                     <th>description</th>
                     <th>status</th>
                     <th>actions</th>
@@ -83,6 +84,7 @@ export const ExpenseList = () => {
                         <td>{tr.paymentType.paymentType}</td>
                         <td>{tr.payee.payeeName}</td>
                         <td>{tr.user.firstName}</td>
+                        <td>{tr.goal.goalName}</td>
                         <td>{tr.description}</td>
                         <td>{tr.status}</td>
                         <td><Link to={`/user/updateExpense/${tr._id}`} className='btn btn-round btn-primary'>update</Link>

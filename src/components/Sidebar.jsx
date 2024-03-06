@@ -11,19 +11,26 @@ export const Sidebar = () => {
         },
 
         {
-            name: 'Add Expense',
+            name: 'New Transaction',
             iconclass:"nc-icon nc-simple-add",
             link: '/user/addExpense'
         },
+
         {
-            name:'My Expenses',
+            name: 'Goals',
+            iconclass:"nc-icon nc-simple-add",
+            link: '/user/addGoal'
+        },
+
+        {
+            name:'My Transactions',
             iconclass:"nc-icon nc-bullet-list-67",
             link:'/user/expenseList'
         }
     ]
 
     const path = document.location.pathname;
-    console.log('url path=', path);
+    //console.log('url path=', path);
 
     return (
         <div className="sidebar" data-image="../assets/img/sidebar-5.jpg">

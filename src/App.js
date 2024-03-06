@@ -9,11 +9,12 @@ import { ExpenseList } from './components/userComponents/ExpenseList';
 import { Signup } from './components/Signup';
 import { UpdateExpense } from './components/userComponents/UpdateExpense';
 import { ProtectedRoutes } from './components/hooks/ProtectedRoutes';
+import { AddGoal } from './components/userComponents/AddGoal';
 
 function App() {
 
   const path = document.location.pathname;
-  console.log('url path=', path);
+  //console.log('url path=', path);
 
   return (
     <div>
@@ -38,6 +39,7 @@ function App() {
                 <Route path='/user/addExpense' element={<AddExpense />}></Route>
                 <Route path='/user/expenseList' element={<ExpenseList />}></Route>
                 <Route path='/user/updateExpense/:id' element={<UpdateExpense />}></Route>
+                <Route path='/user/addGoal' element={<AddGoal/>}></Route>
               </Route>
 
             </Routes>

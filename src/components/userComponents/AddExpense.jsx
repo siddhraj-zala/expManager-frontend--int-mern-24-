@@ -4,23 +4,24 @@ import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 
 export const AddExpense = () => {
-
+  
   useEffect(() => {
-    getUser();
+    const id = sessionStorage.getItem("id");
+    
+    getUserById(id);
     getPayee();
     getCategory();
     getSubCategory();
     getTransactionType();
     getPaymentType();
+    getGoalsByUserId(id);
   }, [])
-
-  const userId = sessionStorage.getItem("id");
 
   const [user, setuser] = useState([]); //contains the data of logged-in user
   //console.log('first name', user.firstName);
-  const getUser = async () => {
+  const getUserById = async (usId) => {
     try {
-      const res = await axios.get("http://localhost:4000/user/getUserById/" + userId);
+      const res = await axios.get("http://localhost:4000/user/getUserById/" + usId);
       //console.log("user", res);
       setuser(res.data.data);
 
@@ -84,6 +85,17 @@ export const AddExpense = () => {
       console.log('getPaymentType error :', err);
     }
   }
+  const [goals, setgoals] = useState([]);
+  const getGoalsByUserId = async (usId) => {
+    try {
+        const goalData = await axios.get("http://localhost:4000/goal/getGoalByUserId/" + usId);
+        //console.log("user goals...", goalData);
+        setgoals(goalData.data.data);
+
+    } catch (err) {
+        console.log("getGoalsByUserId error :", err);
+    }
+}
 
   const sendMail = async (data) => {
     try {
@@ -129,7 +141,7 @@ export const AddExpense = () => {
       if (res.status === 201) {
         alert('transaction created');
         //console.log("transaction data :", res.data.data);
-        const getTrById = await axios.get("http://localhost:4000/transaction/getTransactionById/" + res.data.data._id);
+        const getTrById = await axios.get("http://localhost:4000/transaction/getTransactionById/" + res.data.data._id); //fetching data for sendMail
         //console.log('transaction by id...', getTrById.data.data);
         //sendMail(getTrById.data.data);
       }
@@ -230,6 +242,20 @@ export const AddExpense = () => {
                     </div>
                   </div>
                 </div>
+
+                <div className="row">
+                  <div className="col-md-12">
+                    <div className="form-group">
+                      <label htmlFor='description'>Goal:</label>
+                      <select {...register('goal')} className="form-control">
+                        {goals.map((dt) => {
+                          return (<option value={dt._id}>{dt.goalName}</option>)
+                        })}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="row">
                   <div className="col-md-12">
                     <div className="form-group">
