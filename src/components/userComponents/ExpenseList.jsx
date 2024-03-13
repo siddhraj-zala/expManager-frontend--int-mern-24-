@@ -54,8 +54,8 @@ export const ExpenseList = () => {
               <table className="table table-hover">
                 <thead>
                   <tr>
+                    <th>title</th>
                     <th>category</th>
-                    <th>subCategory</th>
                     <th>amount</th>
                     <th>transaction date</th>
                     <th>transaction type</th>
@@ -72,8 +72,8 @@ export const ExpenseList = () => {
                   {transaction.map((tr) => {
                     return (
                       <tr>
+                        <td>{tr.title}</td>
                         <td>{tr.category.categoryName}</td>
-                        <td>{tr.subCategory.subCategoryName}</td>
                         {tr.transactionType.transactionType === "expense" 
                         ? 
                         <td style={{color:'red'}}>{`-${tr.amount}`}</td>
@@ -84,7 +84,7 @@ export const ExpenseList = () => {
                         <td>{tr.paymentType.paymentType}</td>
                         <td>{tr.payee.payeeName}</td>
                         <td>{tr.user.firstName}</td>
-                        <td>{tr.goal.goalName}</td>
+                        <td>{tr.goal === null ? "no goal":tr.goal.goalName}</td>
                         <td>{tr.description}</td>
                         <td>{tr.status}</td>
                         <td><Link to={`/user/updateExpense/${tr._id}`} className='btn btn-round btn-primary'>update</Link>

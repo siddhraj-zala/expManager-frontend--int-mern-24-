@@ -1,60 +1,30 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-export const AddGoal = () => {
+export const UpdateGoal = () => {
 
     const [user, setuser] = useState(null);
-    const [goal, setgoal] = useState([]);
-    var [count, setcount] = useState(0); // to call useEffect whenever the form is submitted
 
     useEffect(() => {
         const userId = sessionStorage.getItem("id");
-        setuser(userId) // to access userId in form
+        setuser(userId);
 
-        getGoalsByUserId(userId);
-
-    }, [count]);
-
-    const getGoalsByUserId = async (userId) => {
-        try {
-            const goalData = await axios.get("http://localhost:4000/goal/getGoalByUserId/" + userId);
-            //console.log("user goals...", goalData);
-            setgoal(goalData.data.data);
-
-        } catch (err) {
-            console.log("getGoalsByUserId error :", err);
-        }
-    }
-
-    const deleteGoalById = async (id) => {
-        
-        try{
-            const res = await axios.delete("http://localhost:4000/goal/deleteGoalById/" + id);
-            if(res.status === 200){
-                alert("goal and it's releted transactions are deleted successfully");
-                count++;
-                setcount(count);
-            }
-        }catch(err) {
-            console.log("deleteGoalById error :", err);
-        }
-    }
+    }, []);
 
     const { register, handleSubmit } = useForm();
+    const goalId = useParams().id;
     const submitHandler = async (data) => {
         try {
-            const res = await axios.post("http://localhost:4000/goal/createGoal", data);
-            //console.log("createGoal res.", res);
-            if (res.status === 201) {
-                alert("goal created successfully");
-                count++;
-                setcount(count);
+            const res = await axios.put("http://localhost:4000/goal/updateGoalById/" + goalId, data);
+
+            if (res.status === 200) {
+                alert("goal updaated successfully");
             }
 
         } catch (err) {
-            console.log("goal creation error :", err);
+            console.log("goal updation error :", err);
         }
 
     }
@@ -65,7 +35,7 @@ export const AddGoal = () => {
                 <div className="col-md-12">
                     <div className="card">
                         <div className="card-header">
-                            <h4 className="card-title">Create New Goal</h4>
+                            <h4 className="card-title">Update Goal</h4>
                         </div>
                         <div className="card-body">
                             <form onSubmit={handleSubmit(submitHandler)}>
@@ -127,7 +97,7 @@ export const AddGoal = () => {
                                 </div>
 
                                 <button type="submit" className="btn btn-info btn-fill">
-                                    Create Goal
+                                    Update Goal
                                 </button>
                                 <div className="clearfix" />
                             </form>
@@ -136,48 +106,6 @@ export const AddGoal = () => {
                 </div>
             </div>
 
-            <div className="row">
-                <div className="col-md-12">
-                    <div className="card card-plain table-plain-bg">
-                        <div className="card-header ">
-                            <h4 className="card-title">My Goals</h4>
-                            {/* <p className="card-category">Here is a subtitle for this table</p> */}
-                        </div>
-                        <div className="card-body table-full-width table-responsive">
-                            <table className="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>user</th>
-                                        <th>goal</th>
-                                        <th>max-expenditure</th>
-                                        <th>start date</th>
-                                        <th>end date</th>
-                                        <th>action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {goal.map((tr) => {
-                                        return (
-                                            <tr>
-                                                <td>{tr.user.firstName}</td>
-                                                <td>{tr.goalName}</td>
-                                                <td>{tr.goalAmount}</td>
-                                                <td>{tr.startDate}</td>
-                                                <td>{tr.endDate}</td>
-
-                                                <td>
-                                                    <Link to={`/user/updateGoal/${tr._id}`} className='btn btn-round btn-primary'>update</Link>
-                                                    <button onClick={() => { deleteGoalById(tr._id) }} className='btn btn-round btn-danger'>delete</button>
-                                                </td>
-                                            </tr>
-                                        )
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     )
 }

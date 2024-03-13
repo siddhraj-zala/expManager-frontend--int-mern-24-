@@ -83,7 +83,7 @@ export const Signup = () => {
                 <div className='col-md-6'>
                     <div className='card'>
                         <div className='card-header'>
-                            <h4 className='card-title'>Login</h4>
+                            <h4 className='card-title'>Sign-up</h4>
                         </div>
                         <div className='card-body'>
                             <form onSubmit={handleSubmit(submitHandler)}>

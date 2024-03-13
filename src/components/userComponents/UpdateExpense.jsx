@@ -7,21 +7,22 @@ import { useNavigate, useParams } from 'react-router-dom';
 export const UpdateExpense = () => {
 
     useEffect(() => {
-        getUser();
+        const userId = sessionStorage.getItem("id");
+
+        getUser(userId);
         getPayee();
         getCategory();
-        getSubCategory();
+        // getSubCategory();
         getTransactionType();
         getPaymentType();
+        getGoalsByUserId(userId);
     }, [])
-
-    const userId = sessionStorage.getItem("id");
 
     const [user, setuser] = useState([]); //contains the data of logged-in user
     //console.log('first name', user.firstName);
-    const getUser = async () => {
+    const getUser = async (usrId) => {
         try {
-            const res = await axios.get("http://localhost:4000/user/getUserById/" + userId);
+            const res = await axios.get("http://localhost:4000/user/getUserById/" + usrId);
             //console.log("user", res);
             setuser(res.data.data);
 
@@ -53,16 +54,16 @@ export const UpdateExpense = () => {
         }
     }
 
-    const [subCategory, setsubCategory] = useState([]);
-    const getSubCategory = async () => {
-        try {
-            const res = await axios.get("http://localhost:4000/subCategory/getSubCategory");
-            setsubCategory(res.data.data);
+    // const [subCategory, setsubCategory] = useState([]);
+    // const getSubCategory = async () => {
+    //     try {
+    //         const res = await axios.get("http://localhost:4000/subCategory/getSubCategory");
+    //         setsubCategory(res.data.data);
 
-        } catch (err) {
-            console.log('getSubCategory error :', err);
-        }
-    }
+    //     } catch (err) {
+    //         console.log('getSubCategory error :', err);
+    //     }
+    // }
 
     const [transactionType, settransactionType] = useState([]);
     const getTransactionType = async () => {
@@ -86,29 +87,41 @@ export const UpdateExpense = () => {
         }
     }
 
-    const navigate = useNavigate();
+    const [goals, setgoals] = useState([]);
+    const getGoalsByUserId = async (usrId) => {
+        try {
+            const goalData = await axios.get("http://localhost:4000/goal/getGoalByUserId/" + usrId);
+            //console.log("user goals...", goalData);
+            setgoals(goalData.data.data);
 
+        } catch (err) {
+            console.log("getGoalsByUserId error :", err);
+        }
+    }
+
+    const navigate = useNavigate();
     const id = useParams().id;
     //console.log('transaction id',id);
+    const { register, handleSubmit } = useForm();
+    // {
+    //     defaultValues: async () => {
+    //         const res = await axios.get("http://localhost:4000/transaction/getTransactionById/" + id);
+    //         //console.log('data to be updated :', res);
+    //         return ({
+    //             payee: res.data.data.payee.payeeName,
+    //             transactionDateTime: res.data.data.transactionDateTime,
+    //             category: res.data.data.category.categoryName,
+    //             subCategory: res.data.data.subCategory.subCategoryName,
+    //             transactionType: res.data.data.transactionType.transactionType,
+    //             paymentType: res.data.data.paymentType.paymentType,
+    //             goal: res.data.data.goal.goalName,
+    //             amount: res.data.data.amount,
+    //             description: res.data.data.description,
+    //             status: res.data.data.status                
+    //         })
+    //     }
 
-    const { register, handleSubmit } = useForm({
-        defaultValues: async () => {
-            const res = await axios.get("http://localhost:4000/transaction/getTransactionById/" + id);
-            console.log('data to be updated :', res);
-            return ({
-                payee: res.data.data.payee.payeeName,
-                transactionDateTime: res.data.data.transactionDateTime,
-                category: res.data.data.category.categoryName,
-                subCategory: res.data.data.subCategory.subCategoryName,
-                transactionType: res.data.data.transactionType.transactionType,
-                paymentType: res.data.data.paymentType.paymentType,
-                amount: res.data.data.amount,
-                description: res.data.data.description,
-                status: res.data.data.status
-            })
-        }
-
-    });
+    // }
     const submitHandler = async (data) => {
         //console.log('form data', data);
         try {
@@ -136,7 +149,7 @@ export const UpdateExpense = () => {
                         <div className="card-body">
                             <form onSubmit={handleSubmit(submitHandler)}>
                                 <div className="row">
-                                    <div className="col-md-5 pr-1">
+                                    <div className="col-md-4 pr-1">
                                         <div className="form-group">
                                             <label htmlFor='transactionDateTime'>Date & Time</label>
                                             <input
@@ -146,9 +159,15 @@ export const UpdateExpense = () => {
                                             />
                                         </div>
                                     </div>
+                                    <div className="col-md-4 pr-1">
+                                        <div className="form-group">
+                                            <label htmlFor='title'>Title:</label>
+                                            <input type='text' {...register('title')} className="form-control"></input>
+                                        </div>
+                                    </div>
                                     <div className="col-md-3 px-1">
                                         <div className="form-group">
-                                            <label htmlFor='category'>Category:</label>
+                                            <label htmlFor='category'>Category:</label><br />
                                             <select {...register('category')} className="form-control">
                                                 {category.map((dt) => {
                                                     return (<option value={dt._id}>{dt.categoryName}</option>)
@@ -156,7 +175,7 @@ export const UpdateExpense = () => {
                                             </select>
                                         </div>
                                     </div>
-                                    <div className="col-md-4 pl-1">
+                                    {/* <div className="col-md-4 pl-1">
                                         <div className="form-group">
                                             <label htmlFor='subCategory'>Sub category:</label>
                                             <select {...register('subCategory')} className="form-control">
@@ -165,7 +184,7 @@ export const UpdateExpense = () => {
                                                 })}
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div className="row">
                                     <div className="col-md-6 pr-1">
@@ -215,6 +234,21 @@ export const UpdateExpense = () => {
                                         </div>
                                     </div>
                                 </div>
+
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="form-group">
+                                            <label htmlFor='goal'>Goal:</label>
+                                            <select {...register('goal')} className="form-control">
+                                                {goals.map((dt) => {
+                                                    return (
+                                                        <option value={dt._id}>{dt.goalName}</option>)
+                                                })}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div className="row">
                                     <div className="col-md-12">
                                         <div className="form-group">

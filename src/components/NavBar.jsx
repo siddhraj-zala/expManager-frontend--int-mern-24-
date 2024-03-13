@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 export const NavBar = () => {
+
+  
+    
+    
     return (
         <nav className="navbar navbar-expand-lg " color-on-scroll={500}>
             <div className="container-fluid">

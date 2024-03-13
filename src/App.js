@@ -10,6 +10,8 @@ import { Signup } from './components/Signup';
 import { UpdateExpense } from './components/userComponents/UpdateExpense';
 import { ProtectedRoutes } from './components/hooks/ProtectedRoutes';
 import { AddGoal } from './components/userComponents/AddGoal';
+import { UpdateGoal } from './components/userComponents/UpdateGoal';
+import { NavBar } from './components/NavBar';
 
 function App() {
 
@@ -29,6 +31,10 @@ function App() {
 
           <div className='content'>
 
+            {/* {
+              path === "/" || path === "/signup" || path === "" ? null : <NavBar />
+            } */}
+
             <Routes>
 
               <Route path='/' element={<Login />}></Route>
@@ -39,10 +45,14 @@ function App() {
                 <Route path='/user/addExpense' element={<AddExpense />}></Route>
                 <Route path='/user/expenseList' element={<ExpenseList />}></Route>
                 <Route path='/user/updateExpense/:id' element={<UpdateExpense />}></Route>
-                <Route path='/user/addGoal' element={<AddGoal/>}></Route>
+                <Route path='/user/addGoal' element={<AddGoal />}></Route>
+                <Route path='/user/updateGoal/:id' element={<UpdateGoal />}></Route>
               </Route>
 
+              <Route path='/*' element={<div><h1>404</h1><p>page not found</p></div>}></Route>
+
             </Routes>
+            
           </div>
         </div>
       </div>
