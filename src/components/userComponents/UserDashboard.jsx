@@ -1,28 +1,19 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Bar } from 'react-chartjs-2';
-import { Chart, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from 'chart.js';
-Chart.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
+import { BarChart } from './TransactionCharts';
 
 export const UserDashboard = () => {
 
   const [transaction, settransaction] = useState([]);
   let [income, setincome] = useState(0);
   let [expense, setexpense] = useState(0);
-  // const [categories, setcategories] = useState([]);
   const [searchRes, setsearchRes] = useState([]);
-
-  const [graphData, setgraphData] = useState({
-    labels: [],
-    datasets: []
-  })
 
   useEffect(() => {
     const id = sessionStorage.getItem("id");
 
     getTransactionByUserId(id);
-    // getCategories();
   }, [])
 
   useEffect(() => {
@@ -53,56 +44,28 @@ export const UserDashboard = () => {
       // console.log("tr data..", res);
       settransaction(res.data.data);
 
-      if (res.data.data && res.data.data.length > 0) {
-
-        const transformedData = {
-          labels: res.data.data.map((dt) => dt.category.categoryName),
-          datasets: [{
-            label: "expenses",
-            data: res.data.data.map((dt) => dt.amount),
-            backgroundColor: ["red", "green", "blue"],
-            borderWidth: 1
-          }]
-        }
-
-        setgraphData(transformedData);
-      }
-
     } catch (err) {
       console.log('getTransaction error :', err);
 
     }
   }
 
-  // const getCategories = async () => {
-  //   try {
-
-  //     const res = await axios.get("http://localhost:4000/category/getCategory");
-  //     //  console.log("categories...", res);
-  //     setcategories(res.data.data);
-
-  //   } catch (err) {
-  //     console.log('getTransaction error :', err);
-  //   }
-  // }
-
-  // const graphData = {
-
-  // }
-
   const serachHandler = async (e) => {
     // console.log("inputText contains :", e.target.value); 
     try {
-      
+
       const userId = sessionStorage.getItem("id");
-      
-      const res = await axios.get("http://localhost:4000/transaction/getFilteredTransactionByUserId/"+userId, {
-        params:{
-          title:e.target.value
-        }
-      });
-      // console.log("data......", res.data.data);
-      setsearchRes(res.data.data);
+
+      if (e.target.value !== '') {
+        const res = await axios.get("http://localhost:4000/transaction/getFilteredTransactionByUserId/" + userId, {
+          params: {
+            title: e.target.value
+          }
+        });
+
+        // console.log("search res...", res.data.data);
+        setsearchRes(res.data.data);
+      }
 
     } catch (err) {
       console.log("searchHandler error :", err);
@@ -144,9 +107,7 @@ export const UserDashboard = () => {
             <div className="card-body ">
               <div id="chartHours" className="ct-chart">
 
-                <Bar
-                  data={graphData}
-                />
+                <BarChart/>
 
               </div>
             </div>
@@ -176,11 +137,17 @@ export const UserDashboard = () => {
               <div id="chartHours" className="ct-chart">
 
                 <input type='text' onChange={(e) => serachHandler(e)} placeholder='search'></input>
-                <br/>
-                <h3>{searchRes.title}</h3>
-                <h4>{searchRes.category.categoryName}</h4>
-                <h4>{searchRes.amount}</h4>
-                <br/>
+                <br /><br />
+                {searchRes.map((dt) => {
+                  return (
+                    <div>
+                      <b>{dt.title}</b>
+                      <p>category:{dt.category.categoryName}, amount:{dt.amount}</p>
+                      <br />
+                    </div>
+                  )
+
+                })}
 
               </div>
             </div>

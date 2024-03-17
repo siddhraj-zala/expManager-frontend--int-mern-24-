@@ -256,6 +256,7 @@ export const AddExpense = () => {
                     <div className="form-group">
                       <label htmlFor='goal'>Goal:</label>
                       <select {...register('goal')} className="form-control">
+                        <option value={''}>select goal</option>
                         {goals.map((dt) => {
                           return (<option value={dt._id}>{dt.goalName}</option>)
                         })}
