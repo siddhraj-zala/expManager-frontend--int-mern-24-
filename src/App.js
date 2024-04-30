@@ -12,12 +12,13 @@ import { ProtectedRoutes } from './components/hooks/ProtectedRoutes';
 import { AddGoal } from './components/userComponents/AddGoal';
 import { UpdateGoal } from './components/userComponents/UpdateGoal';
 import { NavBar } from './components/NavBar';
+import { useEffect } from 'react';
 
 function App() {
 
   const path = document.location.pathname;
   //console.log('url path=', path);
-
+  
   return (
     <div>
 
